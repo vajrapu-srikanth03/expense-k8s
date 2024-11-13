@@ -39,35 +39,26 @@ spec:
           - "-c"
           - |
             # Ensure that the root password is read from the file
+            # We're overriding the default entrypoint (/entrypoint.sh mysqld) to ensure MySQL uses the root password from the mounted file.
             export MYSQL_ROOT_PASSWORD=$(cat /etc/mysql-secret/MYSQL_ROOT_PASSWORD) && exec /entrypoint.sh mysqld
         volumeMounts:
         - name: mysql-secret-volume
           mountPath: "/etc/mysql-secret"
           readOnly: true
+        - name: mysql-data
+          mountPath: /var/lib/mysql
       volumes:
       - name: mysql-secret-volume
         secret:
-          secretName: mysql # Provide the name of the secret you want to mount.
-  
+          secretName: mysql # Provide the name of the secret you want to mount. 
 
-
-
-
-  # volumeClaimTemplates:
-  # - metadata:
-  #     name: mysql-data
-
-
-
-  #     volumeClaimTemplates:
-  #   - metadata:
-  #       name: elasticsearch-data # Do not change this name unless you set up a volume mount for the data path.
-  #     spec:
-  #       accessModes:
-  #       - ReadWriteOnce
-  #       resources:
-  #         requests:
-  #           storage: 5Gi
-  #       storageClassName: standard
-
-      
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: ebs-sc
+      resources:
+        requests:
+          storage: 1Gi
