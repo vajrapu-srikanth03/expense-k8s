@@ -34,7 +34,12 @@ spec:
         # envFrom:
         #   - secretRef:
         #       name: mysql       #name of the secret   ---working good
-
+        command:
+        - "sh"
+        - "-c"
+        - |
+          # Ensure that the root password is read from the file
+          export MYSQL_ROOT_PASSWORD=$(cat /etc/mysql-secret/MYSQL_ROOT_PASSWORD)
         volumeMounts:
         - name: mysql-secret-volume
           mountPath: "/etc/mysql-secret"
