@@ -88,4 +88,4 @@ spec:
           items:
           - key: nginx.conf # This is the key in the ConfigMap.
             path: nginx.conf # This is the path (file name) that will be used inside the container.
-      restartPolicy: Never
+      restartPolicy: Always
