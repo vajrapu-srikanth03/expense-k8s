@@ -101,12 +101,18 @@ spec:
         - name: mysql-secret-volume
           mountPath: "/etc/mysql-secret"
           readOnly: true
+        - name: mysql-config
+          mountPath: /etc/my.cnf
+          subPath: my.cnf
         # - name: mysql-data
         #   mountPath: /var/lib/mysql
       volumes:
       - name: mysql-secret-volume
         secret:
           secretName: mysql # Provide the name of the secret you want to mount. 
+      - name: mysql-config
+        configMap:
+          name: mysql-config
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
