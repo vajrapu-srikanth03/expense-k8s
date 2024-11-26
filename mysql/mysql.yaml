@@ -25,16 +25,16 @@ spec:
         tier: db 
         project: expense # has to match .spec.selector.matchLabels
     spec:
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - mysql
-            topologyKey: kubernetes.io/hostname
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #     - labelSelector:
+      #         matchExpressions:
+      #         - key: app
+      #           operator: In
+      #           values:
+      #           - mysql
+      #       topologyKey: kubernetes.io/hostname
       serviceAccount: database
       serviceAccountName: database
       terminationGracePeriodSeconds: 10
@@ -77,17 +77,17 @@ spec:
           limits:
             cpu: "1"
             memory: "2Gi"
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-              - ALL
-          privileged: false
-          readOnlyRootFilesystem: true
-          fsGroup: 999
-          runAsGroup: 999
-          runAsNonRoot: true
-          runAsUser: 999  # MySQL typically runs under UID 999 (adjust if needed)
+        # securityContext:
+        #   allowPrivilegeEscalation: false
+        #   capabilities:
+        #     drop:
+        #       - ALL
+        #   privileged: false
+        #   readOnlyRootFilesystem: true
+        #   fsGroup: 999
+        #   runAsGroup: 999
+        #   runAsNonRoot: true
+        #   runAsUser: 999  # MySQL typically runs under UID 999 (adjust if needed)
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         command:
@@ -101,8 +101,8 @@ spec:
         - name: mysql-secret-volume
           mountPath: "/etc/mysql-secret"
           readOnly: true
-        - name: mysql-data
-          mountPath: /var/lib/mysql
+        # - name: mysql-data
+        #   mountPath: /var/lib/mysql
       volumes:
       - name: mysql-secret-volume
         secret:
@@ -112,12 +112,12 @@ spec:
     rollingUpdate:
       partition: 0 # Controls the number of pods that will not be updated during the rolling update
 
-  volumeClaimTemplates:
-  - metadata:
-      name: mysql-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: ebs-sc
-      resources:
-        requests:
-          storage: 1Gi
+  # volumeClaimTemplates:
+  # - metadata:
+  #     name: mysql-data
+  #   spec:
+  #     accessModes: [ "ReadWriteOnce" ]
+  #     storageClassName: ebs-sc
+  #     resources:
+  #       requests:
+  #         storage: 1Gi
