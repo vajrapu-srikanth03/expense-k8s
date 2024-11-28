@@ -10,7 +10,7 @@ spec:
     whenDeleted: Retain
     whenScaled: Retain
   podManagementPolicy: OrderedReady # only for statefulset- pods are started in a specific order and only proceed to the next pod once the previous one is fully ready.
-  replicas: 2
+  replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
