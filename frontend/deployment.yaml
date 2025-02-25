@@ -68,12 +68,12 @@ spec:
           initialDelaySeconds: 3
           periodSeconds: 3
         securityContext:
-          allowPrivilegeEscalation: true
+          # allowPrivilegeEscalation: true
         #   readOnlyRootFilesystem: true
-        #   fsGroup: 999
-        #   runAsGroup: 999
+          fsGroup: 1001
+          runAsGroup: 1001
         #   runAsNonRoot: true
-          runAsUser: 0 # Run as root user
+          runAsUser: 1001 # Run as root user
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
