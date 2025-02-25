@@ -85,9 +85,9 @@ spec:
         #   privileged: false
         #   readOnlyRootFilesystem: true
           fsGroup: 999
-          runAsGroup: 999
+          # runAsGroup: 999
         #   runAsNonRoot: true
-        #   runAsUser: 999  # MySQL typically runs under UID 999 (adjust if needed)
+          runAsUser: 999  # MySQL typically runs under UID 999 (adjust if needed)
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         command:
