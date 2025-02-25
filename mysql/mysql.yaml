@@ -101,8 +101,8 @@ spec:
         - name: mysql-secret-volume
           mountPath: "/etc/mysql-secret"
           readOnly: true
-        # - name: mysql-data
-        #   mountPath: /var/lib/mysql
+        - name: mysql-data
+          mountPath: /var/lib/mysql
       volumes:
       - name: mysql-secret-volume
         secret:
@@ -112,12 +112,12 @@ spec:
     rollingUpdate:
       partition: 0 # Controls the number of pods that will not be updated during the rolling update
 
-  # volumeClaimTemplates:
-  # - metadata:
-  #     name: mysql-data
-  #   spec:
-  #     accessModes: [ "ReadWriteOnce" ]
-  #     storageClassName: ebs-sc
-  #     resources:
-  #       requests:
-  #         storage: 1Gi
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: ebs-sc
+      resources:
+        requests:
+          storage: 1Gi

@@ -2,12 +2,13 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: expense-ingress
+  namespace: expense
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: alb
   rules:
-  - host: "expense.skanth306.shop"
+  - host: "skanth306.shop"
     http:
       paths:
       - path: "/"
