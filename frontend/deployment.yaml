@@ -41,10 +41,13 @@ spec:
       serviceAccount: frontend
       serviceAccountName: frontend
       terminationGracePeriodSeconds: 10
-
+      securityContext:
+        fsGroup: 1001
       containers:
       - name: frontend
         image: srikanthhg/frontend:expense
+        ports:
+        - containerPort: 80
         imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
@@ -70,7 +73,7 @@ spec:
         securityContext:
           # allowPrivilegeEscalation: true
         #   readOnlyRootFilesystem: true
-          fsGroup: 1001
+          # fsGroup: 1001
           runAsGroup: 1001
         #   runAsNonRoot: true
           runAsUser: 1001 # Run as root user
