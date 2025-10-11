@@ -47,7 +47,7 @@ spec:
       - name: frontend
         image: srikanthhg/frontend:expense
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
