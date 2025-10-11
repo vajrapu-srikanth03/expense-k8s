@@ -41,8 +41,8 @@ spec:
       serviceAccount: frontend
       serviceAccountName: frontend
       terminationGracePeriodSeconds: 10
-      # securityContext:
-        # fsGroup: 1001
+      securityContext:
+        runAsUser: 0
       containers:
       - name: frontend
         image: srikanthhg/frontend:expense
