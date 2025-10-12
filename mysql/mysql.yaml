@@ -7,8 +7,8 @@ metadata:
     tier: database
 spec:
   # persistentVolumeClaimRetentionPolicy:
-    # whenDeleted: Retain
-    # whenScaled: Retain
+  #   whenDeleted: Retain
+  #   whenScaled: Retain
   # podManagementPolicy: OrderedReady # only for statefulset- pods are started in a specific order and only proceed to the next pod once the previous one is fully ready.
   replicas: 1
   revisionHistoryLimit: 10
@@ -25,6 +25,8 @@ spec:
         tier: db 
         project: expense # has to match .spec.selector.matchLabels
     spec:
+      securityContext:
+        fsGroup: 1001 
       # affinity:
       #   podAntiAffinity:
       #     requiredDuringSchedulingIgnoredDuringExecution:
