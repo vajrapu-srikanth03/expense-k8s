@@ -88,8 +88,8 @@ spec:
         - name: azurefile
           mountPath: /mnt/azurefile
         # NEW: Mount Azure Blob
-        # - name: blob
-        #   mountPath: /mnt/blob
+        - name: blob
+          mountPath: /mnt/blob
       volumes:
       - name: nginx-conf
         configMap:
@@ -101,9 +101,9 @@ spec:
       - name: azurefile
         persistentVolumeClaim:
           claimName: pvc-azurefile
-      # - name: blob
-      #   persistentVolumeClaim:
-      #     claimName: pvc-blob
+      - name: blob
+        persistentVolumeClaim:
+          claimName: pvc-blob
       restartPolicy: Always
 ---
 apiVersion: v1
@@ -116,6 +116,20 @@ spec:
     - ReadWriteMany
   storageClassName: azurefile-csi
   volumeName: azurefile
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-blob
+  namespace: expense
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  volumeName: pv-blob
   resources:
     requests:
       storage: 5Gi
@@ -150,3 +164,32 @@ spec:
     - cache=strict
     - nosharesock
     - nobrl  # disable sending byte range lock requests to the server and for applications which have challenges with posix locks
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: blob.csi.azure.com
+  name: pv-blob
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain  # If set as "Delete" container would be removed after pvc deletion
+  storageClassName: ""
+  mountOptions:
+    - nconnect=4
+  csi:
+    driver: blob.csi.azure.com
+    # make sure volumeid is unique for every identical storage blob container in the cluster
+    # character `#` and `/` are reserved for internal use and cannot be used in volumehandle
+    volumeHandle: mystorageacceastus_mytestcontainer
+    volumeAttributes:
+      resourceGroup: MC_myRG_myaksCluster-eastus_eastus
+      storageAccount: mystorageacceastus
+      containerName: mytestcontainer
+      protocol: nfs
+    nodeStageSecretRef:
+      name: azure-secret
+      namespace: expense
