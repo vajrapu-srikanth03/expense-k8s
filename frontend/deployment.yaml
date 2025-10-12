@@ -137,7 +137,7 @@ spec:
     driver: file.csi.azure.com
     volumeHandle: "MC_myRG_myaksCluster-eastus_eastus#mystorageacceastus#mytestshareeastus"  # make sure this volumeid is unique for every identical share in the cluster
     volumeAttributes:
-      shareName: aksshare
+      shareName: mytestshareeastus
     nodeStageSecretRef:
       name: azure-secret
       namespace: expense
