@@ -152,6 +152,7 @@ spec:
     requests:
       storage: 1Gi
   volumeName: mysql-disk-pv
+  storageClassName: ""
 ---
 # mysql-disk-pv.yaml
 apiVersion: v1
@@ -166,9 +167,10 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
   csi:
     driver: disk.csi.azure.com
     volumeHandle: "/subscriptions/2cab150b-4433-4b0e-95a8-fabb980b3485/resourcegroups/MC_myRG_myaksCluster-eastus_eastus/providers/Microsoft.Compute/disks/mydayadisk" # provide Disk URI
-    volumeAttributes:
-      fsType: ext4
+    # volumeAttributes:
+    #   fsType: ext4
 ---
