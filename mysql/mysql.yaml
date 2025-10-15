@@ -133,7 +133,7 @@ metadata:
   name: mysql-data
   namespace: expense
 spec:
-  storageClassName: "azurefile"
+  storageClassName: "default"
   accessModes:
   - ReadWriteOnce
   resources:
