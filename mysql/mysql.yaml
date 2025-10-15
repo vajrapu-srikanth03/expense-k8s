@@ -133,9 +133,42 @@ metadata:
   name: mysql-data
   namespace: expense
 spec:
-  storageClassName: "ebs-sc"
+  storageClassName: "azurefile"
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
+---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: mysql-data
+#   namespace: expense
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 10Gi
+#   volumeName: mysql-disk-pv
+---
+# mysql-disk-pv.yaml
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   annotations:
+#     pv.kubernetes.io/provisioned-by: disk.csi.azure.com
+#   name: mysql-disk-pv
+# spec:
+#   capacity:
+#     storage: 10Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: ""
+#   csi:
+#     driver: disk.csi.azure.com
+#     volumeHandle: # provide Disk URI
+#     volumeAttributes:
+#       fsType: ext4
