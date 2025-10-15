@@ -190,7 +190,7 @@ spec:
       # resourceGroup: MC_myRG_myaksCluster-eastus_eastus
       # storageAccount: mystorageacceastus
       containerName: mytestcontainer
-      # protocol: nfs
+      # protocol: fuse # optional
     nodeStageSecretRef:
       name: azure-secret
       namespace: expense
