@@ -84,10 +84,10 @@ spec:
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf # This ensures that only the specific file (nginx.conf) from the ConfigMap is mounted at the specified path. or Ensures that only the file nginx.conf is mounted, rather than the entire ConfigMap.
           readOnly: true # This ensures the file mounted from the ConfigMap is read-only and cannot be modified by the container.
-        NEW: Mount Azure File Share
+        # NEW: Mount Azure File Share
         - name: azurefile
           mountPath: /mnt/azurefile
-        NEW: Mount Azure Blob
+        # NEW: Mount Azure BlobZ
         - name: blob
           mountPath: /mnt/blob
       volumes:
