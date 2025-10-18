@@ -84,12 +84,12 @@ spec:
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf # This ensures that only the specific file (nginx.conf) from the ConfigMap is mounted at the specified path. or Ensures that only the file nginx.conf is mounted, rather than the entire ConfigMap.
           readOnly: true # This ensures the file mounted from the ConfigMap is read-only and cannot be modified by the container.
-        # NEW: Mount Azure File Share
-        # - name: azurefile
-        #   mountPath: /mnt/azurefile
-        # NEW: Mount Azure Blob
-        # - name: blob
-        #   mountPath: /mnt/blob
+        NEW: Mount Azure File Share
+        - name: azurefile
+          mountPath: /mnt/azurefile
+        NEW: Mount Azure Blob
+        - name: blob
+          mountPath: /mnt/blob
       volumes:
       - name: nginx-conf
         configMap:
@@ -98,99 +98,99 @@ spec:
           - key: nginx.conf # This is the key in the ConfigMap.
             path: nginx.conf # This is the path (file name) that will be used inside the container.
       # NEW VOLUMES
-      # - name: azurefile
-      #   persistentVolumeClaim:
-      #     claimName: pvc-azurefile
-      # - name: blob
-      #   persistentVolumeClaim:
-      #     claimName: pvc-blob
-      # restartPolicy: Always
+      - name: azurefile
+        persistentVolumeClaim:
+          claimName: pvc-azurefile
+      - name: blob
+        persistentVolumeClaim:
+          claimName: pvc-blob
+      restartPolicy: Always
 ---
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: pvc-azurefile
-#   namespace: expense
-# spec:
-#   accessModes:
-#     - ReadWriteMany
-#   storageClassName: azurefile-csi
-#   volumeName: azurefile
-#   resources:
-#     requests:
-#       storage: 5Gi
-# ---
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: pvc-blob
-#   namespace: expense
-# spec:
-#   accessModes:
-#     - ReadWriteMany
-#   storageClassName: ""
-#   volumeName: pv-blob
-#   resources:
-#     requests:
-#       storage: 5Gi
-# ---
-# apiVersion: v1
-# kind: PersistentVolume
-# metadata:
-#   annotations:
-#     pv.kubernetes.io/provisioned-by: file.csi.azure.com
-#   name: azurefile
-# spec:
-#   capacity:
-#     storage: 5Gi
-#   accessModes:
-#     - ReadWriteMany
-#   persistentVolumeReclaimPolicy: Retain
-#   storageClassName: azurefile-csi
-#   csi:
-#     driver: file.csi.azure.com
-#     volumeHandle: "MC_myRG_myaksCluster-eastus_eastus#mystorageacceastus#mytestshareeastus"  # make sure this volumeid is unique for every identical share in the cluster
-#     volumeAttributes:
-#       shareName: mytestshareeastus
-#     nodeStageSecretRef:
-#       name: azure-secret
-#       namespace: expense
-#   mountOptions:
-#     - dir_mode=0777
-#     - file_mode=0777
-#     - uid=0
-#     - gid=0
-#     - mfsymlinks
-#     - cache=strict
-#     - nosharesock
-#     - nobrl  # disable sending byte range lock requests to the server and for applications which have challenges with posix locks
-# ---
-# apiVersion: v1
-# kind: PersistentVolume
-# metadata:
-#   annotations:
-#     pv.kubernetes.io/provisioned-by: blob.csi.azure.com
-#   name: pv-blob
-# spec:
-#   capacity:
-#     storage: 5Gi
-#   accessModes:
-#     - ReadWriteMany
-#   persistentVolumeReclaimPolicy: Retain  # If set as "Delete" container would be removed after pvc deletion
-#   storageClassName: ""
-#   mountOptions:
-#     - -o allow_other
-#     - --file-cache-timeout-in-seconds=120
-#   csi:
-#     driver: blob.csi.azure.com
-#     # make sure volumeid is unique for every identical storage blob container in the cluster
-#     # character `#` and `/` are reserved for internal use and cannot be used in volumehandle
-#     volumeHandle: mystorageacceastus_mytestcontainer
-#     volumeAttributes:
-#       # resourceGroup: MC_myRG_myaksCluster-eastus_eastus
-#       # storageAccount: mystorageacceastus
-#       containerName: mytestcontainer
-#       # protocol: fuse # optional
-#     nodeStageSecretRef:
-#       name: azure-secret
-#       namespace: expense
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-azurefile
+  namespace: expense
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: azurefile-csi
+  volumeName: azurefile
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-blob
+  namespace: expense
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  volumeName: pv-blob
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: file.csi.azure.com
+  name: azurefile
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azurefile-csi
+  csi:
+    driver: file.csi.azure.com
+    volumeHandle: "MC_myRG_myaksCluster-eastus_eastus#mystorageacceastus#mytestshareeastus"  # make sure this volumeid is unique for every identical share in the cluster
+    volumeAttributes:
+      shareName: mytestshareeastus
+    nodeStageSecretRef:
+      name: azure-secret
+      namespace: expense
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=0
+    - gid=0
+    - mfsymlinks
+    - cache=strict
+    - nosharesock
+    - nobrl  # disable sending byte range lock requests to the server and for applications which have challenges with posix locks
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: blob.csi.azure.com
+  name: pv-blob
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain  # If set as "Delete" container would be removed after pvc deletion
+  storageClassName: ""
+  mountOptions:
+    - -o allow_other
+    - --file-cache-timeout-in-seconds=120
+  csi:
+    driver: blob.csi.azure.com
+    # make sure volumeid is unique for every identical storage blob container in the cluster
+    # character `#` and `/` are reserved for internal use and cannot be used in volumehandle
+    volumeHandle: mystorageacceastus_mytestcontainer
+    volumeAttributes:
+      # resourceGroup: MC_myRG_myaksCluster-eastus_eastus
+      # storageAccount: mystorageacceastus
+      containerName: mytestcontainer
+      # protocol: fuse # optional
+    nodeStageSecretRef:
+      name: azure-secret
+      namespace: expense
